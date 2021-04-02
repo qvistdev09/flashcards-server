@@ -1,6 +1,10 @@
 require('dotenv').config();
 require('./database/db-connect');
 
+const { createMockData } = require('./database/mocks/mockDecks');
+
+createMockData();
+
 const app = require('./app');
 
 const port = process.env.PORT || 8080;

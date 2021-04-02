@@ -8,8 +8,10 @@ const origin = 'http://localhost:3000';
 app.use(cors({ origin }));
 
 const users = require('./routes/users');
+const decks = require('./routes/decks');
 
 app.use('/users', users);
+app.use('/decks', decks);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

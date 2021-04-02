@@ -13,7 +13,8 @@ const Card = sequelize.define('Card', {
 });
 
 const Deck = sequelize.define('Deck', {
-  settings: { type: DataTypes.STRING, allowNull: false },
+  deckOwner: { type: DataTypes.STRING, allowNull: false },
+  deckTitle: { type: DataTypes.STRING, allowNull: false },
 });
 
 Deck.hasMany(Card);
