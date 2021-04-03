@@ -1,9 +1,9 @@
 require('dotenv').config();
 require('./database/db-connect');
 
-const { createMockData } = require('./database/mocks/mockDecks');
+const { syncModels } = require('./database/actions');
 
-createMockData();
+syncModels();
 
 const app = require('./app');
 

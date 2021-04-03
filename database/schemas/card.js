@@ -2,22 +2,20 @@ const sequelize = require('../db-connect');
 const { DataTypes } = require('sequelize');
 
 const Card = sequelize.define('Card', {
-  front: {
+  cardId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    unique: true,
+  },
+  cardFront: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  back: {
+  cardBack: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-const Deck = sequelize.define('Deck', {
-  deckOwner: { type: DataTypes.STRING, allowNull: false },
-  deckTitle: { type: DataTypes.STRING, allowNull: false },
-});
-
-Deck.hasMany(Card);
-Card.belongsTo(Deck);
-
-module.exports = { Card, Deck };
+module.exports = { Card };
