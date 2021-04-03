@@ -9,9 +9,11 @@ app.use(cors({ origin }));
 
 const users = require('./routes/users');
 const decks = require('./routes/decks');
+const cards = require('./routes/cards');
 
 app.use('/users', users);
 app.use('/decks', decks);
+app.use('/cards', cards);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
