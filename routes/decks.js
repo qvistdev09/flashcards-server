@@ -2,6 +2,16 @@ const router = require('express').Router();
 const { authRequired } = require('../auth/auth-middleware');
 const { Deck } = require('../database/schemas/deck');
 
+router.get('/:deckSlug', authRequired, async (req, res) => {
+  const { uid: deckOwner } = req.jwt.claims;
+  const { deckSlug } = req.params;
+  const matchedDeck = await Deck.findOne({ where: { deckOwner, deckSlug } });
+  if (matchedDeck === null) {
+    return res.status(404).end();
+  }
+  res.json(matchedDeck.toJSON());
+});
+
 router.get('/', authRequired, async (req, res) => {
   const { uid } = req.jwt.claims;
   const userDecks = await Deck.findAll({ where: { deckOwner: uid } });
