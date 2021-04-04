@@ -19,8 +19,8 @@ const { Deck, Card } = require('../schemas');
 ]; */
 
 const syncModels = async () => {
-  await Deck.sync({ alter: true });
-  await Card.sync({ alter: true });
+  await Deck.sync({ force: true });
+  await Card.sync({ force: true });
   console.log('Models synced');
 };
 

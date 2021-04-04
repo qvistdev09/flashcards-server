@@ -3,14 +3,20 @@ const { authRequired } = require('../auth/auth-middleware');
 const { Deck } = require('../database/schemas/deck');
 const { Card } = require('../database/schemas/card');
 
+const { isDue } = require('../modules/date-functions');
+
 router.get('/:deckSlug', authRequired, async (req, res) => {
   const { uid: deckOwner } = req.jwt.claims;
   const { deckSlug } = req.params;
-  const matchedDeck = await Deck.findOne({ where: { deckOwner, deckSlug } });
+  const matchedDeck = await Deck.findOne({
+    where: { deckOwner, deckSlug },
+  });
   if (matchedDeck === null) {
     return res.status(404).end();
   }
-  const cards = await Card.findAll({ where: { deckId: matchedDeck.deckId } });
+  const cards = await Card.findAll({
+    where: { deckId: matchedDeck.deckId },
+  });
   res.json({
     deck: matchedDeck.toJSON(),
     cards,
@@ -19,8 +25,19 @@ router.get('/:deckSlug', authRequired, async (req, res) => {
 
 router.get('/', authRequired, async (req, res) => {
   const { uid } = req.jwt.claims;
-  const userDecks = await Deck.findAll({ where: { deckOwner: uid } });
-  res.json(userDecks);
+  const userDecks = await Deck.findAll({
+    where: { deckOwner: uid },
+  });
+  const withDueCards = await Promise.all(
+    userDecks.map(async deck => {
+      const cards = await Card.findAll({
+        where: { deckId: deck.deckId },
+      });
+      const due = cards.filter(card => isDue(card.cardDue)).length;
+      return { ...deck.toJSON(), cards: cards.length, due };
+    })
+  );
+  res.json(withDueCards);
 });
 
 router.post('/', authRequired, (req, res) => {
@@ -46,7 +63,9 @@ router.delete('/', authRequired, async (req, res) => {
     return res.status(400).end();
   }
   const { deckSlug } = req.body.deck;
-  const matchedDeck = await Deck.findOne({ where: { deckSlug } });
+  const matchedDeck = await Deck.findOne({
+    where: { deckSlug },
+  });
   if (matchedDeck === null) {
     return res.status(404).end();
   }

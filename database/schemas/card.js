@@ -16,6 +16,10 @@ const Card = sequelize.define('Card', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  cardDue: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
 });
 
 module.exports = { Card };
