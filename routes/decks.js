@@ -46,7 +46,7 @@ router.post('/', authRequired, (req, res) => {
     return res.status(400).end();
   }
   const { deckTitle } = req.body.deck;
-  const deckSlug = deckTitle.replace(' ', '-').toLowerCase();
+  const deckSlug = deckTitle.replace(/\s/g, '-').toLowerCase();
 
   Deck.create({
     deckOwner: uid,
